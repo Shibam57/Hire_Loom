@@ -21,9 +21,10 @@ const employeeSchema = new mongoose.Schema({
         minlength: 8
     },
     phone: {
-        type: Number,
-        required: true,
+        type: String,
         unique: true,
+        sparse: true,
+        default: 0,
         trim: true
     },
     education: {
@@ -70,7 +71,6 @@ const employeeSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        required: true
     },
     bio: {
         type: String
@@ -91,10 +91,10 @@ const employeeSchema = new mongoose.Schema({
 
 employeeSchema.pre('save', async function(next) {
     if(!this.isModified('password')) {
-        return next();
+        return ;
     }
     this.password = await bcrypt.hash(this.password, 10);
-    next();
+    // next();
 })
 
 employeeSchema.methods.isPasswordMatch = async function(password) {

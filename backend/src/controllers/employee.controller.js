@@ -23,6 +23,7 @@ const generateAccessRefreshToken = async(userId)=>{
 
         return {accessToken, refreshToken}
     } catch (error) {
+        console.log("ACTUAL ERROR:", error);
         throw new ApiError(500, "Failed to generate access token")
     }
 }
@@ -42,29 +43,30 @@ const registerEmployee = async(req, res, next)=> {
             throw new ApiError(400, "Employee with this email already exists");
         }
 
-        const avatarLocalPath = req.files?.avatar?.[0]?.path;
+        // const avatarLocalPath = req.files?.avatar?.[0]?.path;
 
-        if(!avatarLocalPath) {
-            throw new ApiError(400, "Avatar image is required");
-        }
+        // if(!avatarLocalPath) {
+        //     throw new ApiError(400, "Avatar image is required");
+        // }
 
-        const avatar = await uploadOnCloudinary(avatarLocalPath)
+        // const avatar = await uploadOnCloudinary(avatarLocalPath)
 
-        if(!avatar){
-            throw new ApiError(500, "Failed to upload avatar")
-        }
+        // if(!avatar){
+        //     throw new ApiError(500, "Failed to upload avatar")
+        // }
 
-        const newEmployee = new Employee({
+        const newEmployee = await Employee.create({
             name,
             email,
             password,
-            avatar: avatar.secure_url
+            // avatar: avatar.secure_url
         });
 
-        await newEmployee.save();
+        // await newEmployee.save();
 
         return res.status(201).json(new ApiResponse(201, newEmployee, "Employee registered successfully"));
     } catch(error) {
+        console.log("ACTUAL ERROR:", error);
         throw new ApiError(500, "Failed to register employee");
     }
 };
@@ -104,6 +106,7 @@ const loginEmployee = async(req, res, next)=>{
         .cookie("refreshToken", refreshToken, options)
         .json(new ApiResponse(200, {user: loggedInUser, accessToken, refreshToken}, "Employee logged in successfully"))
     } catch (error) {
+        console.log("ACTUAL ERROR:", error);
         throw new ApiError(500, "Failed to login employee")
     }
 }
@@ -115,7 +118,7 @@ const employeeLogout = async(req, res)=> {
             return res.status(400).json({Message: "No user is currently logged in."})
         }
 
-        await Employee.findByIdAndUpdate(
+        await Employee.findOneAndUpdate(
             req.user?._id,
             {
                 $unset: {
