@@ -66,9 +66,21 @@ const getMyApplications = async (req, res) => {
 const getJobApplications = async (req, res) => {
     try {
         const { jobId } = req.params;
+        const employerId = req.user._id;
+
+        // ✅ Check job belongs to this employer
+        const job = await Job.findOne({
+            _id: jobId,
+            createdBy: employerId
+        });
+
+        if (!job) {
+            throw new ApiError(403, "Not authorized to view applications");
+        }
 
         const applications = await Application.find({
-            job: jobId
+            job: jobId,
+            company: employerId
         })
         .populate('applicant', 'name email skills experience')
         .populate('job', 'title company');
@@ -97,9 +109,33 @@ const updateApplicationStatus = async (req, res) => {
     }
 }
 
+const getEmployerApplications = async (req, res) => {
+    try {
+        const employerId = req.user._id;
+
+        const jobs = await Job.find({ createdBy: employerId }).select("_id");
+
+        const jobIds = jobs.map(j => j._id);
+
+        const applications = await Application.find({
+            job: { $in: jobIds }
+        })
+        .populate("applicant", "name email skills")
+        .populate("job", "title");
+
+        return res.status(200).json(
+            new ApiResponse(200, applications, "All applications fetched")
+        );
+
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     applyJob,
     getMyApplications,
     getJobApplications,
+    getEmployerApplications,
     updateApplicationStatus
 }

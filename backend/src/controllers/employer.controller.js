@@ -4,7 +4,6 @@ const Job = require('../models/job.model');
 const ApiError = require('../utils/ApiError');
 const Company = require('../models/company.model');
 const {uploadOnCloudinary} = require('../utils/cloudinary');
-const { JsonWebTokenError } = require('jsonwebtoken');
 
 const generateAccessRefreshToken = async(userId)=>{
     try {
@@ -41,19 +40,19 @@ const registerEmployer = async (req, res) => {
             throw new ApiError(409, "Employer with this email already exists");
         }
 
-        const avatarLocalPath = req.files?.avatar?.[0]?.path;
+        // const avatarLocalPath = req.files?.avatar?.[0]?.path;
 
-        const avatar = await uploadOnCloudinary(avatarLocalPath);
+        // const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-        if(!avatar){
-            throw new ApiError(500, "Failed to upload avatar");
-        }
+        // if(!avatar){
+        //     throw new ApiError(500, "Failed to upload avatar");
+        // }
 
         const employer = await Employer.create({
             name, 
             email,
             password,
-            avatar: avatar.secure_url,
+            // avatar: avatar.secure_url,
             companyName
         })
 
@@ -65,7 +64,7 @@ const registerEmployer = async (req, res) => {
 
         return res.status(201).json(new ApiResponse(true, "Employer registered successfully", createdUser));
     } catch (error) {
-        throw new ApiError(500, "Failed to register employer");
+        throw new ApiError(500, error.message || "Failed to register employer");
     }
 }
 
@@ -73,7 +72,7 @@ const loginEmployer = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if([email, password].some((field) => field?.trim()==="")){
+        if([email, password].some((field)=>field?.trim()==="")){
             throw new ApiError(400, "Email and password are required");
         }
 
@@ -91,19 +90,23 @@ const loginEmployer = async (req, res) => {
 
         const {accessToken, refreshToken} = await generateAccessRefreshToken(employer?._id);
 
-        const loggedInUser = await Employer.findById(user?._id).select("-password -refreshToken");
+        const loggedInUser = await Employer.findById(employer?._id).select("-password -refreshToken");
 
         const options={
             httpOnly: true,
             secure: true
         }
 
+        console.log("Access Token:", accessToken);
+        console.log("Refresh Token:", refreshToken);
+
+
         return res.status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(new ApiResponse(200, {user: loggedInUser, accessToken, refreshToken}, "Employer logged in successfully"));
     } catch (error) {
-        throw new ApiError(500, "Failed to login employer");
+        throw new ApiError(500, error.message || "Failed to login employer");
     }
 }
 

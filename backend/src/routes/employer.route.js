@@ -10,6 +10,10 @@ const {
     updateEmployerProfile
 } = require("../controllers/employer.controller");
 
+const {
+    getEmployerDashboard
+} = require("../controllers/dashboard.controller");
+
 const employerAuth = require("../middlewares/employer.middleware");
 
 // PUBLIC
@@ -21,5 +25,8 @@ router.post("/refresh-token", refreshAccessToken);
 router.post("/logout", employerAuth.verifyEmployerJWT, logoutEmployer);
 router.get("/profile", employerAuth.verifyEmployerJWT, getEmployerProfile);
 router.put("/profile", employerAuth.verifyEmployerJWT, updateEmployerProfile);
+
+// ✅ DASHBOARD
+router.get("/dashboard", employerAuth.verifyEmployerJWT, getEmployerDashboard);
 
 module.exports = router;

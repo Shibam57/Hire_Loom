@@ -21,18 +21,20 @@ const postJob = async (req, res) =>{
 
         const { title, description, salary, location, jobType, experienceRequired, skillsRequired } = req.body;
 
-        if(!title || !description || !location) {
-            throw new ApiError(400, "Title and description are required");
+        console.log("REQ BODY:", req.body);
+
+        if ([title, description, location].some((field) => typeof field !== "string" || field.trim() === "")) {
+            throw new ApiError(400, "Title, description, and location are required");
         }
 
         const job = await Job.create({
             title,
             description,
             location,
-            salary,
-            jobType,
-            experienceRequired,
-            skillsRequired,
+            salary: salary || null,
+            jobType: jobType || "Full-time",
+            experienceRequired: experienceRequired || "Not specified",
+            skillsRequired: skillsRequired || [],
             company: employer.company,
             createdBy: employerId
         })

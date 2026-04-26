@@ -17,7 +17,9 @@ const employerSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: [true, 'Password is required'],
+        minlength: [8, 'Password must be at least 8 characters long']
+
     },  
     phone: {
         type: Number
@@ -49,10 +51,10 @@ const employerSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 employerSchema.pre('save', async function(next) {
-    if(!this.isModified('password')) return next();
+    if(!this.isModified('password')) return ;
 
     this.password = await bcrypt.hash(this.password, 10);
-    next();
+    // next();
 });
 
 employerSchema.methods.isPasswordMatch = async function(password) {

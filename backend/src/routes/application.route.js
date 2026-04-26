@@ -5,7 +5,8 @@ const {
     applyJob,
     getMyApplications,
     getJobApplications,
-    updateApplicationStatus
+    updateApplicationStatus,
+    getEmployerApplications
 } = require("../controllers/application.controller");
 
 const employeeAuth = require("../middlewares/auth.middleware");
@@ -18,5 +19,6 @@ router.get("/my", employeeAuth.verifyEmployeeJWT, getMyApplications);
 // 🏢 Employer
 router.get("/job/:jobId", employerAuth.verifyEmployerJWT, getJobApplications);
 router.put("/:applicationId/status", employerAuth.verifyEmployerJWT, updateApplicationStatus);
+router.get("/employer", employerAuth.verifyEmployerJWT, getEmployerApplications);
 
 module.exports = router;

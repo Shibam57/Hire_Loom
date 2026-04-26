@@ -12,7 +12,7 @@ const companySchema = new mongoose.Schema({
     },
     logo: {
         type: String,
-        required: true
+        // required: true
     },
     website: {
         type: String
@@ -25,7 +25,7 @@ const companySchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        required: true
+        // required: true
     },
     foundedYear: {
         type: Number
