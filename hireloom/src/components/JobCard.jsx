@@ -11,21 +11,14 @@ import {
 
 const JobCard = ({ job }) => {
   const navigate = useNavigate();
+  const [saved, setSaved] = useState(false);
 
-  const [isSaved, setIsSaved] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  // remove HTML if backend sends rich text
+  const cleanText = (text) =>
+    text ? text.replace(/<[^>]+>/g, "") : "No description available";
 
-  // ==============================
-  // CLEAN HTML
-  // ==============================
-  const stripHtmlTags = (html) => {
-    return html ? html.replace(/<[^>]*>?/gm, "") : "No description provided";
-  };
-
-  // ==============================
-  // TIME FORMAT (Mongo createdAt)
-  // ==============================
-  const getTimePassed = (date) => {
+  // time formatter
+  const timeAgo = (date) => {
     if (!date) return "Recently posted";
 
     const diff = Date.now() - new Date(date);
@@ -39,9 +32,7 @@ const JobCard = ({ job }) => {
     return "Just now";
   };
 
-  // ==============================
-  // SALARY FORMAT (flexible)
-  // ==============================
+  // salary formatter
   const formatSalary = (salary) => {
     if (!salary) return "Not disclosed";
 
@@ -55,145 +46,110 @@ const JobCard = ({ job }) => {
       return `₹${salary.amount}`;
     }
 
-    return "Salary not specified";
-  };
-
-  // ==============================
-  // NAVIGATION
-  // ==============================
-  const handleApply = () => {
-    navigate(`/apply-job/${job._id}`);
+    return "Not specified";
   };
 
   const handleView = () => {
     navigate(`/job/${job._id}`);
   };
 
+  const handleApply = () => {
+    navigate(`/apply-job/${job._id}`);
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
+      whileHover={{ scale: 1.02 }}
+      className="bg-white border rounded-xl shadow-md hover:shadow-lg transition p-4"
     >
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        className="relative group p-1 rounded-2xl bg-white border border-gray-200 hover:border-indigo-400 shadow-lg hover:shadow-xl transition-all"
-      >
-        <div className="bg-white rounded-2xl overflow-hidden">
+      {/* HEADER */}
+      <div className="flex justify-between items-start">
+        <div className="flex gap-3">
+          <img
+            src={job.company?.logo || "/default-company.png"}
+            alt="company"
+            className="w-12 h-12 rounded-md object-cover border"
+          />
 
-          {/* NEW Badge */}
-          {getTimePassed(job.createdAt) === "Just now" && (
-            <span className="absolute top-3 right-3 bg-indigo-500 text-white text-[10px] px-2 py-1 rounded-full">
-              NEW
-            </span>
-          )}
-
-          {/* HEADER */}
-          <div className="p-5 flex justify-between">
-            <div className="flex gap-3">
-              <img
-                src={job.company?.logo || "/default-company.png"}
-                alt="logo"
-                className="w-12 h-12 rounded-lg object-cover border"
-              />
-              <div>
-                <h3 className="text-md font-bold text-gray-800">
-                  {job.title}
-                </h3>
-                <p className="text-sm text-gray-500">
-                  {job.company?.name || "Company"}
-                </p>
-              </div>
-            </div>
-
-            {/* Save */}
-            <button
-              onClick={() => setIsSaved(!isSaved)}
-              className={`text-lg ${
-                isSaved ? "text-indigo-500" : "text-gray-400"
-              }`}
-            >
-              <FiBookmark />
-            </button>
-          </div>
-
-          {/* TAGS */}
-          <div className="px-5 pb-3 flex flex-wrap gap-2 text-xs">
-            <span className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded">
-              <FiMapPin /> {job.location || "Remote"}
-            </span>
-
-            <span className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded">
-              <FiBriefcase /> {job.category || "General"}
-            </span>
-
-            <span className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded">
-              <FiDollarSign /> {formatSalary(job.salary)}
-            </span>
-
-            {job.type && (
-              <span className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded">
-                <FiClock /> {job.type}
-              </span>
-            )}
-          </div>
-
-          {/* DESCRIPTION */}
-          <div className="px-5 pb-3">
-            <p
-              onClick={() => setIsExpanded(!isExpanded)}
-              className={`text-sm text-gray-600 cursor-pointer ${
-                isExpanded ? "" : "line-clamp-3"
-              }`}
-            >
-              {stripHtmlTags(job.description)}
+          <div>
+            <h2 className="font-semibold text-lg text-gray-800">
+              {job.title}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {job.company?.name || "Company"}
             </p>
           </div>
-
-          {/* SKILLS */}
-          {job.skills?.length > 0 && (
-            <div className="px-5 pb-3 flex flex-wrap gap-2">
-              {job.skills.slice(0, 4).map((skill, i) => (
-                <span
-                  key={i}
-                  className="text-xs bg-gray-100 px-2 py-1 rounded"
-                >
-                  {skill}
-                </span>
-              ))}
-              {job.skills.length > 4 && (
-                <span className="text-xs text-gray-400">
-                  +{job.skills.length - 4}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* FOOTER */}
-          <div className="px-5 py-3 border-t flex justify-between items-center bg-gray-50">
-            <span className="text-xs text-gray-400">
-              {getTimePassed(job.createdAt)}
-            </span>
-
-            <div className="flex gap-2">
-              <button
-                onClick={handleView}
-                className="text-xs px-3 py-1 border rounded text-indigo-600"
-              >
-                View
-              </button>
-
-              <button
-                onClick={handleApply}
-                className="text-xs px-3 py-1 bg-indigo-600 text-white rounded"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
         </div>
-      </motion.div>
+
+        <button
+          onClick={() => setSaved(!saved)}
+          className={`text-xl ${
+            saved ? "text-indigo-600" : "text-gray-400"
+          }`}
+        >
+          <FiBookmark />
+        </button>
+      </div>
+
+      {/* TAGS */}
+      <div className="flex flex-wrap gap-2 mt-3 text-xs">
+        <span className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+          <FiMapPin /> {job.location || "Remote"}
+        </span>
+
+        <span className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+          <FiBriefcase /> {job.jobType || "Full Time"}
+        </span>
+
+        <span className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+          <FiDollarSign /> {formatSalary(job.salary)}
+        </span>
+
+        <span className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded">
+          <FiClock /> {timeAgo(job.createdAt)}
+        </span>
+      </div>
+
+      {/* DESCRIPTION */}
+      <p className="text-sm text-gray-600 mt-3 line-clamp-3">
+        {cleanText(job.description)}
+      </p>
+
+      {/* SKILLS */}
+      {job.skillsRequired?.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-3">
+          {job.skillsRequired.slice(0, 4).map((skill, i) => (
+            <span
+              key={i}
+              className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded"
+            >
+              {skill}
+            </span>
+          ))}
+          {job.skillsRequired.length > 4 && (
+            <span className="text-xs text-gray-400">
+              +{job.skillsRequired.length - 4}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* BUTTONS */}
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={handleView}
+          className="px-3 py-1 text-sm border rounded text-indigo-600"
+        >
+          View
+        </button>
+
+        <button
+          onClick={handleApply}
+          className="px-3 py-1 text-sm bg-indigo-600 text-white rounded"
+        >
+          Apply
+        </button>
+      </div>
     </motion.div>
   );
 };

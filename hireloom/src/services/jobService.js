@@ -4,8 +4,9 @@ import API from "./api"; // 👈 your axios instance with interceptors
 // 📥 GET ALL JOBS
 // ==============================
 export const getJobsAPI = async (params = {}) => {
-  params: { keyword, location, skill }
+  // params: { keyword, location, skill }
   const res = await API.get("/jobs", { params });
+  console.log("API RESPONSE:", res.data);
   return res.data;
 };
 
@@ -14,6 +15,7 @@ export const getJobsAPI = async (params = {}) => {
 // ==============================
 export const getJobByIdAPI = async (jobId) => {
   const res = await API.get(`/jobs/${jobId}`);
+  console.log("API RESPONSE:", res.data.data);
   return res.data;
 };
 

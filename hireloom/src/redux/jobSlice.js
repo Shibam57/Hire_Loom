@@ -14,7 +14,8 @@ export const getJobs = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const res = await getJobsAPI(params);
-      return res.data;
+      console.log("API RESPONSE IN SLICE:", res.data.jobs);
+      return res.data.jobs;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message);
     }
@@ -101,7 +102,7 @@ const jobSlice = createSlice({
       })
       .addCase(getJobs.fulfilled, (state, action) => {
         state.loading = false;
-        state.jobs = action.payload;
+        state.jobs = action.payload.data.jobs; ;
       })
       .addCase(getJobs.rejected, (state, action) => {
         state.loading = false;

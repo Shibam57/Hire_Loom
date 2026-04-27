@@ -6,6 +6,7 @@ import './App.css'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import PostAJob from './pages/PostJob'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -14,7 +15,8 @@ function App() {
     <>
       {/* <Register /> */}
       {/* <Login /> */}
-      <Dashboard />
+      {/* <Dashboard /> */}
+      <PostAJob />
     </>
   )
 }

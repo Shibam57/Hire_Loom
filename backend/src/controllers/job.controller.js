@@ -19,7 +19,7 @@ const postJob = async (req, res) =>{
             throw new ApiError(400, "Employer does not belong to any company");
         }
 
-        const { title, description, salary, location, jobType, experienceRequired, skillsRequired } = req.body;
+        const { title, description, salary, location, jobType, experienceRequired, skills } = req.body;
 
         console.log("REQ BODY:", req.body);
 
@@ -33,8 +33,8 @@ const postJob = async (req, res) =>{
             location,
             salary: salary || null,
             jobType: jobType || "Full-time",
-            experienceRequired: experienceRequired || "Not specified",
-            skillsRequired: skillsRequired || [],
+            experienceRequired: experienceRequired || "fresher",
+            skills: skills || [],
             company: employer.company,
             createdBy: employerId
         })
@@ -93,7 +93,7 @@ const getAllJobs = async (req, res) => {
             const skillArray = skills.split(","); 
             // example: "react,node,mongodb"
 
-            query.skillsRequired = {
+            query.skills = {
                 $in: skillArray.map(skill => new RegExp(skill, "i"))
             };
         }
