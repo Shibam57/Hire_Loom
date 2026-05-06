@@ -21,7 +21,7 @@ export const getMyCompanyAPI = async () => {
 // ==============================
 export const searchCompanyAPI = async (query) => {
   const res = await API.get("/companies/search", {
-    params: { name: query },
+    params: { keyword: query },
   });
   return res.data;
 };

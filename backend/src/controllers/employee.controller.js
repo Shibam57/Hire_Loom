@@ -197,52 +197,131 @@ const getEmployeeProfile = async(req, res)=> {
 }
 
 //  UPDATE PROFILE
-const updateEmployeeProfile = async(req, res)=>{
-    try {
-        if(!req.user?._id){
-            throw new ApiError(400, "No user is currently logged in.")
-        }
+const updateEmployeeProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
 
-        const employee = await Employee.findByIdAndUpdate(
-            req.user?._id,
-            req.body,
-            {new: true}
-        ).select("-password -refreshToken")
+    const {
+      name,
+      phone,
+      location,
+      experience,
+      bio,
+      github,
+      linkedin,
+      degree,
+      branch,
+      college,
+      graduationYear,
+    } = req.body;
 
-        return res.status(200).json(new ApiResponse(200, employee, "Employee profile updated successfully"))
+    let updateData = {};
 
-    } catch (error) {
-        throw new ApiError(500, "Failed to update employee profile")
+    // =========================
+    // BASIC FIELDS
+    // =========================
+    if (name) updateData.name = name;
+    if (phone) updateData.phone = phone;
+    if (location) updateData.location = location;
+    if (experience) updateData.experience = experience;
+    if (bio) updateData.bio = bio;
+    if (github) updateData.github = github;
+    if (linkedin) updateData.linkedin = linkedin;
+
+    // =========================
+    // EDUCATION (NESTED SAFE UPDATE)
+    // =========================
+    if (degree) updateData["education.degree"] = degree;
+    if (branch) updateData["education.branch"] = branch;
+    if (college) updateData["education.college"] = college;
+    if (graduationYear)
+      updateData["education.graduationYear"] = graduationYear;
+
+    // =========================
+    // RESUME
+    // =========================
+    if (req.file) {
+      updateData.resume = req.file.path;
     }
-}
+
+    const employee = await Employee.findByIdAndUpdate(
+      userId,
+      { $set: updateData }, // ✅ IMPORTANT
+      { returnDocument: "after" }
+    ).select("-password");
+
+    return res.status(200).json(
+      new ApiResponse(200, employee, "Profile updated successfully")
+    );
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
 
 //  ADD SKILLS (NO DUPLICATES)
-const addEmployeeSkills = async(req, res) => {
-    try {
-        const {skills} = req.body;
-        if(!req.user?._id){
-            throw new ApiError(400, "No user is currently logged in.")
-        }
+const addEmployeeSkills = async (req, res) => {
+  try {
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
 
-        const employee = await Employee.findById(req.user?._id);
+    const userId = req.user?._id;
 
-        if(!employee) {
-            throw new ApiError(404, "Employee not found")
-        }
-
-        const newSkills = skills.filter(
-            (skill) => !employee.skills.includes(skill)
-        );
-
-        employee.skills.push(...newSkills);
-
-        await employee.save();
-
-        return res.status(200).json(new ApiResponse(200, employee, "Employee skills added successfully"))
-    } catch (error) {
-        throw new ApiError(500, "Failed to add employee skills")
+    if (!userId) {
+      return res.status(401).json({
+        message: "User not authenticated",
+      });
     }
-}
+
+    const { skills } = req.body;
+
+    if (!skills || !Array.isArray(skills)) {
+      return res.status(400).json({
+        message: "Skills must be an array",
+      });
+    }
+
+    const employee = await Employee.findById(userId);
+
+    if (!employee) {
+      return res.status(404).json({
+        message: "Employee not found",
+      });
+    }
+
+    // ✅ Convert string → object
+    const formattedSkills = skills.map((skill) => {
+      if (typeof skill === "string") {
+        return { name: skill, level: "Beginner" };
+      }
+      return skill;
+    });
+
+    // ✅ Remove duplicates (by name)
+    const existingSkillNames = employee.skills.map((s) =>
+      s.name.toLowerCase()
+    );
+
+    const newSkills = formattedSkills.filter(
+      (skill) => !existingSkillNames.includes(skill.name.toLowerCase())
+    );
+
+    // ✅ Push new skills
+    employee.skills.push(...newSkills);
+
+    await employee.save();
+
+    return res.status(200).json({
+      message: "Employee skills added successfully",
+      skills: employee.skills,
+    });
+
+  } catch (error) {
+    console.error("ADD SKILLS ERROR:", error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
     registerEmployee,

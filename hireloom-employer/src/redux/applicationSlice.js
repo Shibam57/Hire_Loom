@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getEmployerApplicationsAPI,
   updateApplicationStatusAPI,
+  getJobApplicationsAPI,
 } from "../services/applicationService";
 
 // ==============================
@@ -15,6 +16,21 @@ export const getEmployerApplications = createAsyncThunk(
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message);
+    }
+  }
+);
+
+// GET APPLICANTS
+export const getJobApplications = createAsyncThunk(
+  "applications/getJobApplications",
+  async (jobId, thunkAPI) => {
+    try {
+      const res = await getJobApplicationsAPI(jobId);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch applicants"
+      );
     }
   }
 );
@@ -39,22 +55,49 @@ export const updateApplicationStatus = createAsyncThunk(
 // ==============================
 const applicationSlice = createSlice({
   name: "applications",
+
   initialState: {
     applications: [],
     loading: false,
+    error: null,
   },
+
+  reducers: {},
+
   extraReducers: (builder) => {
     builder
-      .addCase(getEmployerApplications.fulfilled, (state, action) => {
+
+      // ======================
+      // GET JOB APPLICATIONS
+      // ======================
+      .addCase(getJobApplications.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getJobApplications.fulfilled, (state, action) => {
+        state.loading = false;
         state.applications = action.payload;
       })
+      .addCase(getJobApplications.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ======================
+      // UPDATE STATUS
+      // ======================
       .addCase(updateApplicationStatus.fulfilled, (state, action) => {
-        const index = state.applications.findIndex(
-          (app) => app._id === action.payload._id
+        const updated = action.payload;
+
+        state.applications = state.applications.map((app) =>
+          app._id === updated._id ? updated : app
         );
-        if (index !== -1) {
-          state.applications[index] = action.payload;
-        }
+      })
+
+      // ======================
+      // EMPLOYER DASHBOARD
+      // ======================
+      .addCase(getEmployerApplications.fulfilled, (state, action) => {
+        state.applications = action.payload;
       });
   },
 });

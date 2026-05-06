@@ -100,6 +100,21 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
+      // REGISTER
+      .addCase(registerEmployer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerEmployer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(registerEmployer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       // LOGIN
       .addCase(loginEmployer.pending, (state) => {
         state.loading = true;
@@ -114,11 +129,11 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // REGISTER
-      .addCase(registerEmployer.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-      })
+      // // REGISTER
+      // .addCase(registerEmployer.fulfilled, (state, action) => {
+      //   state.user = action.payload;
+      //   state.isAuthenticated = true;
+      // })
 
       // PROFILE
       .addCase(getEmployerProfile.fulfilled, (state, action) => {

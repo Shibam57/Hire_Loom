@@ -6,8 +6,12 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import PostJob from "../pages/PostJob";
-import Jobs from "../pages/Jobs";
-import Company from "../pages/Company";
+// import Jobs from "../pages/Jobs";
+// import Company from "../pages/CompanyProfile";
+import CompanySearch from "../pages/CompanySearch";
+import CreateCompany from "../pages/CreateCompany";
+import CompanyDetails from "../pages/CompanyDetails";
+import Applicants from "../pages/Applicants";
 
 // ==============================
 // 🔒 PROTECTED ROUTE
@@ -47,20 +51,47 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
+        <Route
+        path="/employer/applicants/:jobId"
+        element={
+          <ProtectedRoute>
+            <Applicants />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* <Route
         path="/jobs"
         element={
           <ProtectedRoute>
             <Jobs />
           </ProtectedRoute>
         }
+      /> */}
+
+      <Route
+        path="/company/:id"
+        element={
+          <ProtectedRoute>
+            <CompanyDetails />
+          </ProtectedRoute>
+        }
       />
 
       <Route
-        path="/company"
+        path="/company_search"
         element={
           <ProtectedRoute>
-            <Company />
+            <CompanySearch />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/create_company"
+        element={
+          <ProtectedRoute>
+            <CreateCompany />
           </ProtectedRoute>
         }
       />

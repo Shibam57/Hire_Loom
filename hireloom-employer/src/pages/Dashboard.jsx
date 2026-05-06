@@ -134,13 +134,15 @@ export default function Dashboard() {
           </button>
 
           {/* Avatar */}
-          <div className="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer">
+          <button 
+          onClick={()=> navigate("/company_search")}
+          className="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-semibold">
               EC
             </div>
             <span className="text-sm font-medium text-gray-700 hidden sm:block">My Company</span>
             <FaChevronDown className="text-gray-400 text-[10px] hidden sm:block" />
-          </div>
+          </button>
         </div>
       </nav>
 
@@ -335,7 +337,7 @@ export default function Dashboard() {
                       <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <motion.button
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => navigate(`/applications/${job._id}`)}
+                          onClick={() => navigate(`/employer/applicants/${job._id}`)}
                           title="View applications"
                           className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
                         >

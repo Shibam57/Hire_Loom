@@ -2,13 +2,14 @@ const Application = require('../models/application.model');
 const Job = require('../models/job.model');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
-const { uploadToCloudinary } = require('../utils/cloudinary');
+const { uploadOnCloudinary } = require('../utils/resumaCloudinary');
 
 // ✅ APPLY FOR A JOB
-const applyJob = async (req, res) => {
+const applyJob = async (req, res, next) => {
     try {
-        const employeeId = req.user.id;
-        const { jobId, coverLetter } = req.body;
+        const employeeId = req.user._id;
+        const jobId = req.params.jobId;
+        const { coverLetter } = req.body;
 
         // 🔍 Check job exists
         const job = await Job.findById(jobId);
@@ -25,25 +26,33 @@ const applyJob = async (req, res) => {
             throw new ApiError(400, "You have already applied for this job");
         }
 
-        const resumePath = req.files?.resume?.[0]?.path;
+        const resumePath = req.files?.resume[0]?.path;
         if(!resumePath) {
             throw new ApiError(400, "Resume is required");
         }
 
         // ☁️ Upload resume to cloudinary
-        const upload = await uploadToCloudinary(resumePath, "resumes");
+        const upload = await uploadOnCloudinary(resumePath);
+
+        if (!upload || !upload.secure_url) {
+            throw new ApiError(500, "Resume upload failed");
+        }
 
         const application = await Application.create({
             applicant: employeeId,
             job: jobId,
             company: job.company,
-            resume: upload.secure_url,
+            resume: {
+                url: upload.secure_url,
+                public_id: upload.public_id
+            },
             coverLetter
         });
 
         return res.status(201).json(new ApiResponse(201, application, "Applied successfully"));
     } catch (error) {
-        throw new ApiError(500, error.message);
+        console.error("APPLY ERROR:", error);
+        next(error);
     }
 }
 
@@ -51,7 +60,7 @@ const applyJob = async (req, res) => {
 const getMyApplications = async (req, res) => {
     try {
         const applications = await Application.find({
-            applicant: req.user.id
+            applicant: req.user._id
         })
         .populate('job', 'title company')
         .populate('company', 'name logo');
@@ -79,10 +88,9 @@ const getJobApplications = async (req, res) => {
         }
 
         const applications = await Application.find({
-            job: jobId,
-            company: employerId
+            job: jobId
         })
-        .populate('applicant', 'name email skills experience')
+        .populate('applicant', 'name email phone skills experience')
         .populate('job', 'title company');
 
         return res.status(200).json(new ApiResponse(200, applications, "Job applications retrieved successfully"));
@@ -92,22 +100,38 @@ const getJobApplications = async (req, res) => {
 }
 
 // ✅ UPDATE APPLICATION STATUS (Employer)
-const updateApplicationStatus = async (req, res) => {
+const updateApplicationStatus = async (req, res, next) => {
     try {
         const { applicationId } = req.params;
         const { status } = req.body;
+        const employerId = req.user._id;
 
-        const application = await Application.findByIdAndUpdate(
-            applicationId,
-            { status },
-            { new: true }
+        const application = await Application.findById(applicationId).populate("job");
+
+        if (!application) {
+            throw new ApiError(404, "Application not found");
+        }
+
+        // 🔐 Check ownership
+        if (application.job.createdBy.toString() !== employerId.toString()) {
+            throw new ApiError(403, "Not authorized");
+        }
+
+        application.status = status;
+        application.statusUpdatedAt = Date.now();
+
+        await application.save();
+
+        await application.populate("applicant", "name email phone skills experience");
+
+        return res.status(200).json(
+            new ApiResponse(200, application, "Status updated")
         );
 
-        return res.status(200).json( new ApiResponse(200, application, "Application status updated successfully"));
     } catch (error) {
-        throw new ApiError(500, error.message);
+        next(error);
     }
-}
+};
 
 const getEmployerApplications = async (req, res) => {
     try {
@@ -120,7 +144,7 @@ const getEmployerApplications = async (req, res) => {
         const applications = await Application.find({
             job: { $in: jobIds }
         })
-        .populate("applicant", "name email skills")
+        .populate("applicant", "name email phone skills experience")
         .populate("job", "title");
 
         return res.status(200).json(

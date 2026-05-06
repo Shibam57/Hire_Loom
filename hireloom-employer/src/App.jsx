@@ -7,16 +7,14 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import PostAJob from './pages/PostJob'
+import AppRoutes from './routes/AppRoutes'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      {/* <Register /> */}
-      {/* <Login /> */}
-      {/* <Dashboard /> */}
-      <PostAJob />
+      <AppRoutes />
     </>
   )
 }

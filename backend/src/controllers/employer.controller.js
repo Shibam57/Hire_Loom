@@ -29,9 +29,10 @@ const generateAccessRefreshToken = async(userId)=>{
 
 const registerEmployer = async (req, res) => {
     try {
-        const { name, email, password, companyName } = req.body;
+        const { name, email, password} = req.body;
+        console.log("Registering employer with data:", req.body);
 
-        if([name, email, password, companyName].some((field) => field?.trim()==="")){
+        if([name, email, password].some((field) => field?.trim()==="")){
             throw new ApiError(400, "All fields are required");
         }
         const existingEmployer = await Employer.findOne({email});
@@ -53,7 +54,7 @@ const registerEmployer = async (req, res) => {
             email,
             password,
             // avatar: avatar.secure_url,
-            companyName
+            // companyName
         })
 
         const createdUser = await Employer.findById(employer._id).select("-password");

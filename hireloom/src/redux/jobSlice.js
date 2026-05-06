@@ -14,8 +14,11 @@ export const getJobs = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const res = await getJobsAPI(params);
-      console.log("API RESPONSE IN SLICE:", res.data.jobs);
-      return res.data.jobs;
+      console.log("RAW RES:", res);
+      console.log("JOBS PATH 1:", res.data?.jobs);
+      console.log("JOBS PATH 2:", res.jobs);
+      const jobs = res?.data?.jobs || [];
+      return jobs;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message);
     }
@@ -102,7 +105,8 @@ const jobSlice = createSlice({
       })
       .addCase(getJobs.fulfilled, (state, action) => {
         state.loading = false;
-        state.jobs = action.payload.data.jobs; ;
+        console.log("REDUX PAYLOAD:", action.payload);
+        state.jobs = action.payload; // ✅ must be array
       })
       .addCase(getJobs.rejected, (state, action) => {
         state.loading = false;

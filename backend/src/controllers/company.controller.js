@@ -24,7 +24,7 @@ const createCompany = async (req, res) => {
             domain,
             location,
             createdBy: req.user._id,
-            employees: [req.user._id]
+            employers: [req.user._id]
         });
 
         // link employer
@@ -77,9 +77,9 @@ const getCompanyById = async (req, res) => {
 // ✅ JOIN COMPANY
 const joinCompany = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { id } = req.params;
 
-        const company = await Company.findOne({ name });
+        const company = await Company.findById(id);
 
         if (!company) {
             throw new ApiError(404, "Company not found");

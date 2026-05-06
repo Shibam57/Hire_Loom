@@ -3,6 +3,8 @@ import {
   registerEmployeeAPI,
   loginEmployeeAPI,
   getCurrentEmployeeAPI,
+  addEmployeeSkillsAPI,
+  updateEmployeeProfileAPI,
   logoutEmployeeAPI,
 } from "../services/authService";
 
@@ -45,6 +47,38 @@ export const getCurrentEmployee = createAsyncThunk(
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Not authenticated");
+    }
+  }
+);
+
+// 🎯 Add Employee Skills
+export const addEmployeeSkills = createAsyncThunk(
+  "auth/addEmployeeSkills",
+  async (skills, thunkAPI) => {
+    try {
+      const res = await addEmployeeSkillsAPI(skills);
+      return res;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to add skills"
+      );
+    }
+  }
+);
+
+// ==============================
+// ✏️ UPDATE PROFILE
+// ==============================
+export const updateEmployeeProfile = createAsyncThunk(
+  "auth/updateEmployeeProfile",
+  async (formData, thunkAPI) => {
+    try {
+      const res = await updateEmployeeProfileAPI(formData);
+      return res;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Update failed"
+      );
     }
   }
 );
@@ -111,7 +145,8 @@ const authSlice = createSlice({
       })
       .addCase(loginEmployee.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.data;
+        state.user = action.payload.data.user;
+        state.user.role = "employee";
         state.isAuthenticated = true;
       })
       .addCase(loginEmployee.rejected, (state, action) => {
@@ -128,12 +163,43 @@ const authSlice = createSlice({
       .addCase(getCurrentEmployee.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.data;
+        state.user.role = "employee";
         state.isAuthenticated = true;
       })
       .addCase(getCurrentEmployee.rejected, (state) => {
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
+      })
+
+      // =====================
+      // ADD SKILLS
+      // =====================
+      .addCase(addEmployeeSkills.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addEmployeeSkills.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.data; // ✅ update user with new skills
+      })
+      .addCase(addEmployeeSkills.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // =====================
+      // UPDATE PROFILE
+      // =====================
+      .addCase(updateEmployeeProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateEmployeeProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.data; // ✅ updated user
+      })
+      .addCase(updateEmployeeProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // =====================

@@ -3,11 +3,6 @@ import axios from "axios";
 // 🔗 Create Axios Instance
 import API from "./api";
 
-// const API = axios.create({
-//   baseURL: "http://localhost:4000/api",
-//   withCredentials: true, // for cookies (JWT)
-// });
-
 // ==============================
 // 👤 REGISTER EMPLOYEE
 // ==============================
@@ -25,8 +20,11 @@ export const registerEmployeeAPI = async (data) => {
 export const loginEmployeeAPI = async (data) => {
   const response = await API.post("/employees/login", data);
 
+  console.log("LOGIN RESPONSE:", response.data);
+
   // 👉 Save token (if backend sends it)
-  localStorage.setItem("token", response.data.token);
+  localStorage.setItem("token", response.data.data.accessToken);
+  localStorage.setItem("user", JSON.stringify(response.data.data.user));
 
   return response.data;
 };
@@ -35,8 +33,21 @@ export const loginEmployeeAPI = async (data) => {
 // 🔍 GET CURRENT EMPLOYEE
 // ==============================
 export const getCurrentEmployeeAPI = async () => {
-  const response = await API.get("/employees/me");
+  const response = await API.get("/employees/profile");
   return response.data;
+};
+
+export const addEmployeeSkillsAPI = async (skills) => {
+  const res = await API.post("/employees/skills/add", { skills });
+  return res.data;
+};
+
+// ==============================
+// ✏️ UPDATE PROFILE
+// ==============================
+export const updateEmployeeProfileAPI = async (data) => {
+  const res = await API.put("/employees/profile/update", data);
+  return res.data;
 };
 
 // ==============================

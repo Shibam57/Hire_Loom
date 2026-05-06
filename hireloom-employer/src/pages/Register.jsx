@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function Register() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", companyName: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: ""});
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -24,7 +24,7 @@ export default function Register() {
   const validate = () => {
     const e = {};
     if (!form.name.trim()) e.name = "Full name is required";
-    if (!form.companyName.trim()) e.companyName = "Company name is required";
+    // if (!form.companyName.trim()) e.companyName = "Company name is required";
     if (!form.email.trim()) e.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email address";
     if (!form.password.trim()) e.password = "Password is required";
@@ -49,14 +49,17 @@ export default function Register() {
     return;
   }
 
+  setStatus("loading");
+
   const result = await dispatch(
     registerEmployer({
       name: form.name.trim(),
       email: form.email.trim(),
       password: form.password,
-      companyName: form.companyName.trim(),
+      // companyName: form.companyName.trim(),
     })
   );
+  console.log("result", result);
 
   if (result.meta.requestStatus === "fulfilled") {
     setStatus("success");
@@ -64,7 +67,7 @@ export default function Register() {
 
     // ✅ redirect after success
     setTimeout(() => {
-      navigate("/login");
+      navigate("/company_search");
     }, 1000);
   } else {
     setStatus("error");
@@ -73,12 +76,12 @@ export default function Register() {
 };
 
   const getStrength = (pw) => {
-    if (pw.length < 8) return 1;
+    if (pw.length < 6) return 1;
     const hasUpper = /[A-Z]/.test(pw);
     const hasNum = /[0-9]/.test(pw);
     const hasSym = /[^A-Za-z0-9]/.test(pw);
-    if (pw.length >= 12 && hasUpper && hasNum && hasSym) return 4;
-    if (pw.length >= 10 && hasUpper && hasNum) return 3;
+    if (pw.length >= 10 && hasUpper && hasNum && hasSym) return 4;
+    if (pw.length >= 8 && hasUpper && hasNum) return 3;
     return 2;
   };
 
@@ -241,7 +244,7 @@ export default function Register() {
             </div>
 
             {/* Section: Security */}
-            {/*<p className="text-[10.5px] font-semibold uppercase tracking-widest text-gray-400 border-b border-gray-100 pb-1.5 pt-1">
+            {/* <p className="text-[10.5px] font-semibold uppercase tracking-widest text-gray-400 border-b border-gray-100 pb-1.5 pt-1">
               Account security
             </p> */}
 

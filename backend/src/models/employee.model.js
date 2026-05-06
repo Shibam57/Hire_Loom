@@ -24,7 +24,7 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         unique: true,
         sparse: true,
-        default: 0,
+        // default: 0,
         trim: true
     },
     education: {

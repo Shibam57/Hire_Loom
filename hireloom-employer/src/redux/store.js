@@ -10,7 +10,7 @@ const store = configureStore({
     auth: authReducer,
     jobs: jobReducer,
     company: companyReducer,
-    application: applicationReducer,
+    applications: applicationReducer,
     dashboard: dashboardReducer, 
   },
 });

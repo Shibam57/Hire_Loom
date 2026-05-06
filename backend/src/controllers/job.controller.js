@@ -19,7 +19,7 @@ const postJob = async (req, res) =>{
             throw new ApiError(400, "Employer does not belong to any company");
         }
 
-        const { title, description, salary, location, jobType, experienceRequired, skills } = req.body;
+        const { title, description, salary, location,category, jobType, experienceRequired, skills } = req.body;
 
         console.log("REQ BODY:", req.body);
 
@@ -31,6 +31,7 @@ const postJob = async (req, res) =>{
             title,
             description,
             location,
+            category,
             salary: salary || null,
             jobType: jobType || "Full-time",
             experienceRequired: experienceRequired || "fresher",

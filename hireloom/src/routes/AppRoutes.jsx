@@ -12,6 +12,7 @@ import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import Applications from "../pages/Applications";
 import ApplyJob from "../pages/ApplyJob";
+import EditProfile from "../pages/EditProfile";
 
 // 🛡️ Protected Route
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -57,10 +58,19 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/apply/:jobId"
+        path="/apply-job/:id"
         element={
           <ProtectedRoute role="employee">
             <ApplyJob />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/edit-profile"
+        element={
+          <ProtectedRoute role="employee">
+            <EditProfile />
           </ProtectedRoute>
         }
       />

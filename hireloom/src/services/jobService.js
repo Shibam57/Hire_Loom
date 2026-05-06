@@ -33,7 +33,7 @@ export const filterJobsAPI = async (filters) => {
 // 📤 APPLY FOR JOB
 // ==============================
 export const applyJobAPI = async (jobId, formData) => {
-  const res = await API.post(`/applications/${jobId}`, formData);
+  const res = await API.post(`/applications/apply/${jobId}`, formData);
   return res.data;
 };
 
