@@ -138,13 +138,13 @@ export default function Navbar() {
               className="w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs"
               style={{ background: C.ink, color: C.gold }}
             >
-              T
+              H
             </div>
             <span
               className="font-black text-base tracking-tight hidden sm:block"
               style={{ color: C.ink, letterSpacing: "-0.03em" }}
             >
-              Talent<span style={{ color: C.gold }}>Hub</span>
+              Hire<span style={{ color: C.gold }}>loom</span>
             </span>
           </motion.button>
 

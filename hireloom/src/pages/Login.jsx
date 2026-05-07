@@ -139,8 +139,8 @@ const Login = () => {
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm"
             style={{ background: amber, color: "#fff" }}
-          >T</div>
-          <span className="text-white font-bold text-lg tracking-tight">TalentHub</span>
+          >H</div>
+          <span className="text-white font-bold text-lg tracking-tight">Hireloom</span>
         </div>
 
         {/* Hero copy */}
@@ -187,7 +187,7 @@ const Login = () => {
 
         {/* Footer */}
         <p className="relative text-xs" style={{ color: "#3C3632" }}>
-          © 2026 TalentHub Inc. All rights reserved.
+          © 2026 Hireloom Inc. All rights reserved.
         </p>
       </aside>
 
@@ -198,8 +198,8 @@ const Login = () => {
           {/* Mobile brand */}
           <div className="flex items-center gap-2.5 mb-10 lg:hidden">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm"
-              style={{ background: amber, color: "#fff" }}>T</div>
-            <span className="font-bold text-base" style={{ color: ink }}>TalentHub</span>
+              style={{ background: amber, color: "#fff" }}>H</div>
+            <span className="font-bold text-base" style={{ color: ink }}>Hireloom</span>
           </div>
 
           {/* Heading */}

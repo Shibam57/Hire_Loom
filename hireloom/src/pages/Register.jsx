@@ -195,8 +195,8 @@ const Register = () => {
         {/* Brand */}
         <div className="relative flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm"
-            style={{ background: sage, color: "#fff" }}>T</div>
-          <span className="text-white font-bold text-lg tracking-tight">TalentHub</span>
+            style={{ background: sage, color: "#fff" }}>H</div>
+          <span className="text-white font-bold text-lg tracking-tight">Hireloom</span>
         </div>
 
         {/* Hero text */}
@@ -213,7 +213,7 @@ const Register = () => {
               today.
             </p>
             <p className="text-sm leading-relaxed mb-10" style={{ color: "#6B7C6E" }}>
-              Join thousands of professionals who found their dream role through TalentHub.
+              Join thousands of professionals who found their dream role through Hireloom.
             </p>
 
             {/* Feature list */}
@@ -253,8 +253,8 @@ const Register = () => {
           {/* Mobile brand */}
           <div className="flex items-center gap-2.5 mb-8 lg:hidden">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm"
-              style={{ background: sage, color: "#fff" }}>T</div>
-            <span className="font-bold text-base" style={{ color: ink }}>TalentHub</span>
+              style={{ background: sage, color: "#fff" }}>H</div>
+            <span className="font-bold text-base" style={{ color: ink }}>Hireloom</span>
           </div>
 
           {/* Heading */}
