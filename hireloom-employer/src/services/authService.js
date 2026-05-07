@@ -13,9 +13,10 @@ export const registerEmployerAPI = async (data) => {
 // ==============================
 export const loginEmployerAPI = async (data) => {
   const res = await API.post("/employers/login", data);
+  console.log("LOGIN RESPONSE:", res.data.data.accessToken);
 
   // 👉 Save token (if backend sends it)
-  localStorage.setItem("token", res.data.token);
+  localStorage.setItem("token", res.data.data.accessToken);
 
   return res.data;
 };

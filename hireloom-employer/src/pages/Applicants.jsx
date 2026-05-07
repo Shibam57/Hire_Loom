@@ -254,6 +254,11 @@ const ApplicantCard = ({ app, i, onStatus, updatingId }) => {
             active={app.status === "shortlisted"} loading={isUpdating}
             onClick={() => onStatus(app._id, "shortlisted")} />
 
+          <ActionBtn label="Interview" icon="📅"
+            color={C.purple} bgColor={`${C.purple}10`}
+            active={app.status === "interview"} loading={isUpdating}
+            onClick={() => onStatus(app._id, "interview")} />
+
           <ActionBtn label="Hire" icon="🎉"
             color={C.sage} bgColor={`${C.sage}10`}
             active={app.status === "hired"} loading={isUpdating}
@@ -297,7 +302,7 @@ const Applicants = () => {
   // ── Original handler ───────────────────────────────────────
   const handleStatus = (id, status) => {
     setUpdatingId(id);
-    dispatch(updateApplicationStatus({ applicationId: id, status }))
+    dispatch(updateApplicationStatus({ id, status }))
       .finally(() => setUpdatingId(null));
   };
 
@@ -313,7 +318,7 @@ const Applicants = () => {
       );
     });
 
-  const counts = ["all", "pending", "shortlisted", "hired", "rejected"].reduce((acc, key) => {
+  const counts = ["all", "pending", "shortlisted", "interview", "hired", "rejected"].reduce((acc, key) => {
     acc[key] = key === "all" ? applications.length : applications.filter(a => a.status === key).length;
     return acc;
   }, {});
@@ -322,6 +327,7 @@ const Applicants = () => {
     { key: "all",         label: "All",         dot: null      },
     { key: "pending",     label: "Pending",     dot: C.gold    },
     { key: "shortlisted", label: "Shortlisted", dot: C.blue    },
+    { key: "interview",   label: "Interview",   dot: C.purple  },
     { key: "hired",       label: "Hired",       dot: C.sage    },
     { key: "rejected",    label: "Rejected",    dot: C.red     },
   ];
@@ -370,6 +376,7 @@ const Applicants = () => {
                 className="flex flex-wrap gap-2">
                 {[
                   { key: "shortlisted", color: C.blue },
+                  { key: "interview",   color: C.purple },
                   { key: "hired",       color: C.sage },
                   { key: "pending",     color: C.gold },
                   { key: "rejected",    color: C.red  },

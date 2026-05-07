@@ -36,6 +36,7 @@ const STATUS = {
   reviewing: { label: "Reviewing", dot: "#7C6AF7", badge: "#7C6AF714", text: "#7C6AF7",  ring: "#7C6AF730" },
   interview: { label: "Interview", dot: "#0EA5E9", badge: "#0EA5E914", text: "#0EA5E9",  ring: "#0EA5E930" },
   accepted:  { label: "Accepted",  dot: C.sage, badge: `${C.sage}14`,  text: C.sage,    ring: `${C.sage}30`  },
+  hired:     { label: "Hired",     dot: C.sage, badge: `${C.sage}14`,  text: C.sage,    ring: `${C.sage}30`  },
   rejected:  { label: "Rejected",  dot: C.red,  badge: `${C.red}12`,   text: C.red,     ring: `${C.red}30`   },
 };
 const getStatus = (s) => STATUS[s] || STATUS.pending;
@@ -284,6 +285,7 @@ const Applications = () => {
     { key: "pending",  label: "Pending" },
     { key: "interview",label: "Interview" },
     { key: "shortlisted", label: "Shortlisted" },
+    { key: "hired",    label: "Hired" },
     { key: "rejected", label: "Rejected" },
   ];
 
@@ -343,6 +345,8 @@ const Applications = () => {
                 {[
                   { label: "Interview", count: counts.interview, color: "#0EA5E9" },
                   { label: "Shortlisted",  count: counts.shortlisted,  color: C.sage   },
+                  { label: "Hired",       count: counts.hired,       color: C.sage   },
+                  { label: "Rejected",    count: counts.rejected,    color: C.red    },
                   { label: "Pending",   count: counts.pending,   color: C.gold   },
                 ].filter(s => s.count > 0).map((s) => (
                   <span key={s.label}

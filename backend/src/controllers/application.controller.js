@@ -117,6 +117,12 @@ const updateApplicationStatus = async (req, res, next) => {
             throw new ApiError(403, "Not authorized");
         }
 
+        // ✅ Optional: validate allowed statuses
+        const allowedStatus = ["pending", "shortlisted", "interview", "hired", "rejected"];
+        if (!allowedStatus.includes(status)) {
+            throw new ApiError(400, "Invalid status value");
+        }
+
         application.status = status;
         application.statusUpdatedAt = Date.now();
 
