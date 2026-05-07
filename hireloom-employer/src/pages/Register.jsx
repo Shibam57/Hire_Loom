@@ -127,7 +127,7 @@ export default function Register() {
                 <path d="M3 18c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
-            <span className="text-white font-semibold text-lg tracking-tight">TalentHub</span>
+            <span className="text-white font-semibold text-lg tracking-tight">Hireloom</span>
           </div>
 
           <h2 className="text-white text-[28px] font-semibold leading-snug mb-3">
@@ -135,7 +135,7 @@ export default function Register() {
             <span className="text-indigo-400">not harder.</span>
           </h2>
           <p className="text-slate-400 text-sm leading-relaxed mb-10">
-            Join thousands of employers who find top talent faster with TalentHub.
+            Join thousands of employers who find top talent faster with Hireloom.
           </p>
 
           <ul className="space-y-4">
@@ -151,7 +151,7 @@ export default function Register() {
             ))}
           </ul>
         </div>
-        <p className="text-slate-600 text-xs">© 2026 TalentHub Inc. All rights reserved.</p>
+        <p className="text-slate-600 text-xs">© 2026 Hireloom Inc. All rights reserved.</p>
       </aside>
 
       {/* ── Right Panel ── */}
@@ -166,7 +166,7 @@ export default function Register() {
                 <path d="M3 18c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </div>
-            <span className="font-semibold text-gray-900">TalentHub</span>
+            <span className="font-semibold text-gray-900">Hireloom</span>
           </div>
 
           {/* Heading */}

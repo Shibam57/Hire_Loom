@@ -210,7 +210,7 @@ const Login = () => {
             className="mb-8"
           >
             <h1 className="font-black mb-1.5" style={{ fontSize: "1.75rem", color: ink, letterSpacing: "-0.03em" }}>
-              Welcome back
+              Welcome back employee,
             </h1>
             <p className="text-sm" style={{ color: stone }}>
               Sign in to your employee account to continue.
