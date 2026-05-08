@@ -3,11 +3,10 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import PostAJob from './pages/PostJob'
-import AppRoutes from './routes/AppRoutes'
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getEmployerProfile } from "./redux/authSlice";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   const [count, setCount] = useState(0)

@@ -92,6 +92,18 @@ export default function Dashboard() {
     return matchSearch && matchStatus;
   });
 
+  const { user } = useSelector((state) => state.auth);
+  console.log("User from Redux:", user); // Debug log
+
+  const companyName = user?.company?.name || "My Company";
+
+  const companyInitials = companyName
+    .split(" ")
+    .map((word) => word[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
 
@@ -138,9 +150,9 @@ export default function Dashboard() {
           onClick={()=> navigate("/company_search")}
           className="flex items-center gap-2 pl-2 border-l border-gray-100 cursor-pointer">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-semibold">
-              EC
+              {companyInitials}
             </div>
-            <span className="text-sm font-medium text-gray-700 hidden sm:block">My Company</span>
+            <span className="text-sm font-medium text-gray-700 hidden sm:block">{companyName}</span>
             <FaChevronDown className="text-gray-400 text-[10px] hidden sm:block" />
           </button>
         </div>

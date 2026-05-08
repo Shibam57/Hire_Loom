@@ -23,7 +23,7 @@ export const loginEmployeeAPI = async (data) => {
   console.log("LOGIN RESPONSE:", response.data);
 
   // 👉 Save token (if backend sends it)
-  localStorage.setItem("token", response.data.data.accessToken);
+  localStorage.setItem("token", response.data.data.refreshToken);
   localStorage.setItem("user", JSON.stringify(response.data.data.user));
 
   return response.data;

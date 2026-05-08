@@ -16,11 +16,15 @@ const applicationSchema = new mongoose.Schema({
         ref: "Company",
     },
     resume: {
-        type: {
-            url: String,
-            public_id: String
+        url: {
+            type: String,
+            required: true,
         },
-        required: true
+
+        public_id: {
+            type: String,
+            required: true,
+        },
     },
     coverLetter: {
         type: String,

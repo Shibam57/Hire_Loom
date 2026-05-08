@@ -15,6 +15,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     const result = await cloudinary.uploader.upload(localFilePath, {
       folder: "resumes",
       resource_type: "raw", // ✅ IMPORTANT FOR PDF
+      format: "pdf",
     });
 
     return result;

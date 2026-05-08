@@ -107,7 +107,7 @@ const authSlice = createSlice({
       })
       .addCase(registerEmployer.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user; //.user
         state.isAuthenticated = true;
       })
       .addCase(registerEmployer.rejected, (state, action) => {
@@ -121,7 +121,7 @@ const authSlice = createSlice({
       })
       .addCase(loginEmployer.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.data.user;  //.data.user
         state.isAuthenticated = true;
       })
       .addCase(loginEmployer.rejected, (state, action) => {
@@ -137,7 +137,7 @@ const authSlice = createSlice({
 
       // PROFILE
       .addCase(getEmployerProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.data;
         state.isAuthenticated = true;
       })
 

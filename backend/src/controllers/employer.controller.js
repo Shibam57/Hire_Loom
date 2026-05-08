@@ -183,7 +183,14 @@ const getEmployerProfile = async (req, res) => {
             throw new ApiError(401, "Access token is required");
         }
 
-        return res.status(200).json(new ApiResponse(200, req.user, "Employer profile fetched successfully"));
+        const user = await Employer.findById(req.user._id)
+            .populate("company", "name logo");
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        return res.status(200).json(new ApiResponse(200, user, "Employer profile fetched successfully"));
     } catch (error) {
         throw new ApiError(500, "Failed to get employer profile");
     }

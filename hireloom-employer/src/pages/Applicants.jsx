@@ -160,6 +160,10 @@ const ApplicantCard = ({ app, i, onStatus, updatingId }) => {
   const st = getStatus(app.status);
   const isUpdating = updatingId === app._id;
 
+  console.log("APP:", app);
+  console.log("RESUME:", app.resume);
+  console.log("URL:", app.resume?.url);
+
   return (
     <motion.div
       key={app._id}
@@ -239,6 +243,7 @@ const ApplicantCard = ({ app, i, onStatus, updatingId }) => {
         {app.resume?.url && (
           <motion.a whileHover={{ scale: 1.04 }}
             href={app.resume.url} target="_blank" rel="noreferrer"
+            download
             className="inline-flex items-center gap-2 mt-4 text-xs font-black px-4 py-2 rounded-xl transition-all"
             style={{ background: `${C.ink}07`, color: C.ink, border: `1px solid ${C.border}` }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = C.gold; e.currentTarget.style.color = C.gold; }}

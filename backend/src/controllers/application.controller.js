@@ -26,7 +26,8 @@ const applyJob = async (req, res, next) => {
             throw new ApiError(400, "You have already applied for this job");
         }
 
-        const resumePath = req.files?.resume[0]?.path;
+        const resumePath = req.files?.resume?.[0]?.path;
+        console.log("RESUME PATH:", resumePath);
         if(!resumePath) {
             throw new ApiError(400, "Resume is required");
         }

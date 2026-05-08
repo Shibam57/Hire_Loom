@@ -16,7 +16,7 @@ export const loginEmployerAPI = async (data) => {
   console.log("LOGIN RESPONSE:", res.data.data.accessToken);
 
   // 👉 Save token (if backend sends it)
-  localStorage.setItem("token", res.data.data.accessToken);
+  localStorage.setItem("token", res.data.data.refreshToken);
 
   return res.data;
 };

@@ -21,11 +21,11 @@ const employeeSchema = new mongoose.Schema({
         minlength: 8
     },
     phone: {
-        type: String,
-        unique: true,
+        type: Number,
+        unique: false,
         sparse: true,
         default: 0,
-        trim: true
+        trim: true,
     },
     education: {
         degree: {

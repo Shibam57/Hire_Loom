@@ -59,7 +59,8 @@ const registerEmployee = async(req, res, next)=> {
             name,
             email,
             password,
-            // avatar: avatar.secure_url
+            // avatar: avatar.secure_url,
+            // phone: phone || undefined,
         });
 
         // await newEmployee.save();
@@ -203,7 +204,7 @@ const updateEmployeeProfile = async (req, res) => {
 
     const {
       name,
-      phone,
+    //   phone,
       location,
       experience,
       bio,
@@ -221,7 +222,7 @@ const updateEmployeeProfile = async (req, res) => {
     // BASIC FIELDS
     // =========================
     if (name) updateData.name = name;
-    if (phone) updateData.phone = phone;
+    // if (phone) updateData.phone = phone;
     if (location) updateData.location = location;
     if (experience) updateData.experience = experience;
     if (bio) updateData.bio = bio;
